@@ -28,11 +28,7 @@ def run(part):
         for index in range(len(list_one)):
             element_one = list_one[index]
             frequency = len([element_two for element_two in list_two if element_two == element_one])
-            print(frequency)
             result += int(element_one) * frequency
-            
-    
-
     print('result is ' + str(result))
 
 
