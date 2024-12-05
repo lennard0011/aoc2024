@@ -1,7 +1,4 @@
-# Online Python compiler (interpreter) to run Python online.
-# Write Python 3 code in this online editor and run it.
 import os
-
 
 def check_string(string_to_check):
     return string_to_check == "XMAS" or string_to_check == "SAMX"
