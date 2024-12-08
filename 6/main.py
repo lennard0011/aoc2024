@@ -1,4 +1,6 @@
 import os
+import copy
+
 
 STONE = "#"
 
@@ -51,18 +53,19 @@ def go_down(matrix, x, y, seen):
     return (new_x, y)
 
 
-def main(part, filename):
-    script_dir = os.path.dirname(__file__)
-    file_path = os.path.join(script_dir, filename + ".txt")
-    puzzle =  open(file_path, 'r').read().split('\n')
-    matrix = [list(puzzle_line) for puzzle_line in puzzle]
-
+def solve(matrix):
     x, y = find_start_position(matrix)
 
     seen = set()
     seen.add((x, y))
 
+    up_position_seen = set()
+
     while (True):
+        if (x, y) in up_position_seen:
+            return None
+        up_position_seen.add((x,y))
+
         ans = go_up(matrix, x, y, seen)
         if (ans is None):
             break
@@ -83,8 +86,45 @@ def main(part, filename):
             break
         (x, y) = ans
 
-    score = len(seen)
-        
+    return seen
+
+
+def permutate_matrix(matrix, seen):
+    matrices = []
+
+    x_start, y_start = find_start_position(matrix)
+
+    for (i, j) in seen:
+        if i == x_start and j == y_start:
+            continue
+        if matrix[i][j] == ".":
+            new_matrix = copy.deepcopy(matrix)
+            new_matrix[i][j] = STONE
+            matrices.append(new_matrix)
+    
+    return matrices
+
+
+
+def main(part, filename):
+    script_dir = os.path.dirname(__file__)
+    file_path = os.path.join(script_dir, filename + ".txt")
+    puzzle =  open(file_path, 'r').read().split('\n')
+    matrix = [list(puzzle_line) for puzzle_line in puzzle]
+
+    score = 0
+
+    if part == 1:
+        score += len(solve(matrix))
+    elif part == 2:        
+        score = 0
+        seen = solve(matrix)
+        possible_matrices = permutate_matrix(matrix, seen)
+        for index in range(len(possible_matrices)):
+            print(index)
+            if solve(possible_matrices[index]) is None:
+                score += 1
+
     print(score)
    
 main(2, "input")
